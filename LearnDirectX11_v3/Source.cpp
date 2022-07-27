@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include "DirectLightSource.h"
+#include "PointLight.h"
 
 D3D11_VIEWPORT updateViewPort(Graphics* graphics)
 {
@@ -40,18 +41,59 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 		throw;
 
 	Camera mainCamera = Camera();
-	Model bug = Model(&graphics, (char*) "Models//Graphosoma.obj", new DefaultVertexShader(&graphics, L"VertexShader.hlsl"), new PixelShader(&graphics, L"PixelShader.hlsl"));
-	Model hourse = Model(&graphics, (char*) "HorseModel.obj");
-	DirectLightSource directLight = DirectLightSource(&graphics, (char*)"Models//sphere.obj");
+	mainCamera.position = {0, 3, -10};
 
-	float color[4] = { 0.4f, 0.6f, 1.0f, 1.0f };
+	Texture textureSky = Texture(&graphics, L"Textures//texturify_pano-1-2.jpg");
+	Texture stoneWallNormalMap = Texture(&graphics, L"Wall_Stone_017_Normal.jpg");
+	Texture stoneWallAlbedo = Texture(&graphics, L"Wall_Stone_017_BaseColor.jpg");
+	Texture flatNormalMap = Texture(&graphics, L"Textures\\14015-normal.jpg");
+
+	Texture bugAlbedo = Texture(&graphics, L"Textures//Graphosoma.png");
+
+	float factor2 = 0.014f;
+	float factor3 = 0.0007f;
+
+	PointLight whitePointLight = PointLight(&graphics, (char*)"Models//sphere.obj", graphics.shadersContent->defaultVS, graphics.shadersContent->lightSourcePS);
+	whitePointLight.setPosition(float3{ 0, 10, 0 });
+	whitePointLight.setColor(float4{ 1, 1, 1, 1 });
+	whitePointLight.setFactors(float3{ 1, factor2, factor3 });
+
+
+	//Model bug = Model(&graphics, (char*) "Models//Graphosoma.obj", graphics.shadersContent->defaultVS, graphics.shadersContent->defaultPS);
+	//bug.setTexture(&bugAlbedo, 0);
+	//bug.setTexture(&stoneWallNormalMap, 1);
+	//bug.position = { 0, 10, 0 };
+
+	Model skySphere = Model(&graphics, (char*)"Models//sphere.obj", graphics.shadersContent->defaultVS, graphics.shadersContent->skyPS);
+	skySphere.setTexture(&textureSky, 0);
+	skySphere.scale = {-100, -100, -100};
+	skySphere.drawDepthStencil = false;
+
+	Model plane = Model(&graphics, (char*)"Models//Plane.obj", graphics.shadersContent->defaultVS, graphics.shadersContent->defaultPS);
+	plane.setTexture(&stoneWallAlbedo, 0);
+	plane.setTexture(&stoneWallNormalMap, 1);
+	plane.scale = float3{ 1, 1, 1 }; 
+
+	Model metalicHand = Model(&graphics, (char*)"Models\\crytek-sponza-huge-vray-obj\\crytek-sponza-huge-vray.obj", graphics.shadersContent->defaultVS, graphics.shadersContent->defaultPS);
+	//Model metalicHand = Model(&graphics, (char*)"Models\\Sponza-master\\sponza.obj", graphics.shadersContent->defaultVS, graphics.shadersContent->defaultPS);
+	//Model metalicHand = Model(&graphics, (char*)"Models\\grey-knight\\ggfggf.fbx", graphics.shadersContent->defaultVS, graphics.shadersContent->defaultPS);
+	//Model metalicHand = Model(&graphics, (char*)"Models\\Geralt\\source\\model.obj", graphics.shadersContent->defaultVS, graphics.shadersContent->defaultPS);
+	//Model metalicHand = Model(&graphics, (char*)"Models\\moon-knight\\source\\yueguangqishi_battle.fbx", graphics.shadersContent->defaultVS, graphics.shadersContent->defaultPS);
+	metalicHand.setTexture(&textureSky, 0);
+	metalicHand.setTexture(&flatNormalMap, 1);
+	metalicHand.position = {0, -30, -10};
+	metalicHand.scale = { 0.2f, 0.2f, 0.2f };
+
+	//float color[4] = { 0.4f, 0.6f, 1.0f, 1.0f };
+	float color[4] = { 0, 0, 0, 1.0f };
 	bool gameLoop = true;
-	float anlge = 0;
+	RECT clientRect{};
+	GetClientRect(mainWindow.hwnd, &clientRect);
+
 	MSG msg{};
 	graphics.setFirstOldClockAndDeltaTime();
 	mainWindow.activateCursor(false);
-	float k = 0;
-	float a = 0;
+	float time = 0;
 	while (gameLoop)
 	{
 		while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -66,30 +108,24 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 		graphics.updateDeltaTime();
 		mainCamera.responseInput(&graphics, &mainWindow);
 		mainCamera.update(&graphics);
-		graphics.deviceCon->OMSetRenderTargets(1, &graphics.backRenderTarget, graphics.depthStencilView);
+
 		graphics.deviceCon->ClearRenderTargetView(graphics.backRenderTarget, color);
 
-		box.camPos = mainCamera.position;
-		box.draw(&graphics, &mainWindow, mainCamera.viewMatrix, mainCamera.projectionMatrix);
+		graphics.deviceCon->OMSetRenderTargets(1, &graphics.backRenderTarget, NULL);
+		skySphere.position = mainCamera.position;
+		skySphere.draw(&graphics, &mainCamera);
+		graphics.deviceCon->OMSetRenderTargets(1, &graphics.backRenderTarget, graphics.depthStencilView);
 
-		k += 3.14 * graphics.deltaTime;
-		a += 3.14 * graphics.deltaTime;
+		graphics.deviceCon->PSSetShaderResources(9, 1, &graphics.pointLightsSRV);
+		graphics.deviceCon->PSSetConstantBuffers(9, 1, &graphics.lightsCountsBuffer);
+		//textureSky.bind(2);
 
-		hourse.position = float3{50, 0, 15};
-		hourse.draw(&graphics, &mainCamera);
-		//for (int y = 0; y < 3; y++)
-		//	for(int x = 0; x < 3; x++)
-		//{
-		//	bug.position = float3{ x * 10.0f, y * 10.0f, sin((x + y) * 0.5f + k + ((rand() % 1000) / 1000) * 3) * 5};
-		//	bug.rotationAngle = float3{ sin(k + 0.5f) * 3.14f * 0.1f, 0, cos(a) * 3.14f * 0.1f };
-		//	bug.draw(&graphics, &mainCamera);
-		//}
+		plane.draw(&graphics, &mainCamera);
+		whitePointLight.draw(&graphics, &mainCamera);
+		//bug.draw(&graphics, &mainCamera);
+		metalicHand.draw(&graphics, &mainCamera);
 
-		bug.position = float3{10.0f, 10.0f + cos(a) * 3, 0};
-		bug.rotationAngle = float3{ 0, a, 0 };
-		bug.draw(&graphics, &mainCamera);
 
-		directLight.draw(&graphics, &mainCamera);
 
 		graphics.deviceCon->ClearDepthStencilView(graphics.depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 		mainWindow.rawMouseDelta = {};

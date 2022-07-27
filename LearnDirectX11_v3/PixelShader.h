@@ -8,6 +8,7 @@ public:
 	ID3D11PixelShader** getpp();
 	LPVOID GetCodeBufferPointer();
 	SIZE_T GetCodeBufferSize();
+	void setPixelShader(Graphics* graphics);
 private:
 	ID3D11PixelShader* pixelShader;
 	ID3DBlob* pixelShaderCode;

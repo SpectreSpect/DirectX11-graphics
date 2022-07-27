@@ -63,6 +63,15 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadersContent.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WindowBase.h">
@@ -113,6 +122,18 @@
     <ClInclude Include="Camera.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadersContent.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl" />
@@ -120,6 +141,10 @@
     <FxCompile Include="VSLightSourse.hlsl" />
     <FxCompile Include="PSLightSource.hlsl" />
     <FxCompile Include="PSDirectLight.hlsl" />
+    <FxCompile Include="Shaders\VertexShaders\DefaultVertexShader.hlsl" />
+    <FxCompile Include="Shaders\PixelShaders\DefaultPixelShader.hlsl" />
+    <FxCompile Include="Shaders\PixelShaders\LightSourcePS.hlsl" />
+    <FxCompile Include="Shaders\PixelShaders\SkyPS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

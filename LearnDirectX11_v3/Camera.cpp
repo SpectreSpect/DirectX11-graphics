@@ -21,7 +21,7 @@ void Camera::update(Graphics* graphics)
 	RECT clientRect{};
 	GetClientRect(graphics->hwnd, &clientRect);
 	viewMatrix = DirectX::XMMatrixTranslation(-position.x, -position.y, -position.z) * DirectX::XMMatrixRotationY(-rotation.x) * DirectX::XMMatrixRotationX(-rotation.y);
-	projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(0.4 * 3.14, (float)clientRect.right / clientRect.bottom, 0.1f, 1000);
+	projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(0.4 * 3.14, (float)clientRect.right / clientRect.bottom, 0.1f, 100000);
 }
 
 void Camera::responseInput(Graphics* graphics, MainWindow* mainWindow)

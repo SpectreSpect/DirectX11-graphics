@@ -21,6 +21,9 @@ void Mesh::setupMesh(Graphics* graphics, VertexShader* vertexShader, PixelShader
 		float dV1 = vertices[vertex2].texCoord.y - vertices[vertex1].texCoord.y;
 		float dV2 = vertices[vertex3].texCoord.y - vertices[vertex2].texCoord.y;
 
+		if ((dU1 * dV2 - dU2 * dV1) == 0)
+			int p = 5;
+
 		float d = 1.0f / (dU1 * dV2 - dU2 * dV1);
 
 		float3 E1 = {
@@ -62,12 +65,15 @@ void Mesh::setupMesh(Graphics* graphics, VertexShader* vertexShader, PixelShader
 	sampleState = new SampleState(graphics);
 	this->vertexShader = vertexShader;
 	this->pixelShader = pixelShader;
-	//HRESULT hr = DirectX::CreateWICTextureFromFile(graphics->device, L"Wall_Stone_017_BaseColor.jpg", nullptr, &SRVMink);
-	//HRESULT hr = DirectX::CreateWICTextureFromFile(graphics->device, L"tex_u1_v1.jpg", nullptr, &SRVMink);
-	HRESULT hr = DirectX::CreateWICTextureFromFile(graphics->device, L"Textures//Graphosoma.png", nullptr, &SRVMink);
+	HRESULT hr = DirectX::CreateWICTextureFromFile(graphics->device, L"Wall_Stone_017_BaseColor.jpg", nullptr, &SRVMink);
 	if (FAILED(hr)) throw;
-	hr = DirectX::CreateWICTextureFromFile(graphics->device, L"Wall_Stone_017_Normal.jpg", nullptr, &SRVnormalMap);
+	hr = DirectX::CreateWICTextureFromFile(graphics->device, L"Textures\\14015-normal.jpg", nullptr, &SRVnormalMap);
 	if (FAILED(hr)) throw;
+}
+
+void Mesh::setTexture(Texture* texture, int slot)
+{
+	textures[slot] = texture;
 }
 
 void Mesh::update(Graphics* graphics, Camera* camera)
@@ -90,11 +96,18 @@ void Mesh::update(Graphics* graphics, Camera* camera)
 void Mesh::draw(Graphics* graphics, Camera* camera)
 {
 	update(graphics, camera);
-	graphics->deviceCon->PSSetShaderResources(0, 1, &SRVMink);
-	graphics->deviceCon->PSSetShaderResources(1, 1, &SRVnormalMap);
+
+	for (auto i = textures.begin(); i != textures.end(); i++)
+		i->second->bind(i->first);
+
+	//graphics->deviceCon->PSSetShaderResources(0, 1, &SRVMink);
+	//graphics->deviceCon->PSSetShaderResources(1, 1, &SRVnormalMap);
 	UINT strides = sizeof(Vertex);
 	UINT offset = 0;
-	graphics->deviceCon->OMSetRenderTargets(1, &graphics->backRenderTarget, graphics->depthStencilView);
+	if(drawDepthStencil)
+		graphics->deviceCon->OMSetRenderTargets(1, &graphics->backRenderTarget, graphics->depthStencilView);
+	else
+		graphics->deviceCon->OMSetRenderTargets(1, &graphics->backRenderTarget, NULL);
 	sampleState->set(graphics);
 	graphics->deviceCon->IASetVertexBuffers(0, 1, vertexBuffer->getpp(), &strides, &offset);
 	graphics->deviceCon->VSSetConstantBuffers(0, 1, constantBuffer->getpp());

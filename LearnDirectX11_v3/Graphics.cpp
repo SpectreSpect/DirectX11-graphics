@@ -1,4 +1,10 @@
 #include "Graphics.h"
+#include "PointLight.h"
+
+Graphics::Graphics()
+{
+
+}
 
 void Graphics::initDirectX11(HWND outputWindow, int backWidth, int backHeight)
 {
@@ -41,6 +47,39 @@ void Graphics::initDirectX11(HWND outputWindow, int backWidth, int backHeight)
     viewPort.Width = clientRect.right;
     viewPort.Height = clientRect.bottom;
     deviceCon->RSSetViewports(1, &viewPort);
+
+    shadersContent = new ShadersContent(this);
+
+    D3D11_BUFFER_DESC pointLightsBufferDesc{};
+    pointLightsBufferDesc.ByteWidth = sizeof(PointLight::PointLightDesc) * maxPointLightsCount;
+    pointLightsBufferDesc.Usage = D3D11_USAGE_DYNAMIC; // Here may be an error
+    pointLightsBufferDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    pointLightsBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    pointLightsBufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+    pointLightsBufferDesc.StructureByteStride = sizeof(PointLight::PointLightDesc);
+
+    hr = device->CreateBuffer(&pointLightsBufferDesc, NULL, &pointLightsBuffer);
+    if (FAILED(hr)) throw;
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC pointLightsSRVDesc{};
+    pointLightsSRVDesc.Format = DXGI_FORMAT_UNKNOWN;
+    pointLightsSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+    pointLightsSRVDesc.Buffer.FirstElement = 0;
+    pointLightsSRVDesc.Buffer.NumElements = maxPointLightsCount;
+
+    hr = device->CreateShaderResourceView(pointLightsBuffer, &pointLightsSRVDesc, &pointLightsSRV);
+    if (FAILED(hr)) throw;
+
+    D3D11_BUFFER_DESC lightsCountsBufferDesc{};
+    lightsCountsBufferDesc.ByteWidth = sizeof(unsigned int) * 4;
+    lightsCountsBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    lightsCountsBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    lightsCountsBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    lightsCountsBufferDesc.MiscFlags = 0;
+    lightsCountsBufferDesc.StructureByteStride = 0;
+
+    hr = device->CreateBuffer(&lightsCountsBufferDesc, NULL, &lightsCountsBuffer);
+    if (FAILED(hr)) throw;
 }
 
 void Graphics::initDepthStencil()
@@ -71,6 +110,43 @@ void Graphics::setFirstOldClockAndDeltaTime()
 
 void Graphics::updateDeltaTime()
 {
-    deltaTime = max((double)(clock() - oldClock) / 1000.0, 0.0000001);
+    deltaTime = max((double)(clock() - oldClock) / 1000.0, 0.000001);
     oldClock = clock();
+}
+
+void Graphics::bindPointLights()
+{
+
+}
+
+void Graphics::updatePointLights()
+{
+    D3D11_MAPPED_SUBRESOURCE mappedSubResource{};
+    HRESULT hr = deviceCon->Map(pointLightsBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubResource);
+    if (FAILED(hr)) throw;
+
+    unsigned int offset = 0;
+    for (int i = 0; (i < pointLights.size()) && (i < maxPointLightsCount); i++)
+    {
+        PointLight::PointLightDesc pointLightDesc{};
+        pointLightDesc.color = pointLights[i]->color;
+        pointLightDesc.kc = pointLights[i]->kc;
+        pointLightDesc.kl = pointLights[i]->kl;
+        pointLightDesc.kq = pointLights[i]->kq;
+        pointLightDesc.position = pointLights[i]->position;
+        pointLightDesc.turnedOn = pointLights[i]->turnedOn;
+
+        memcpy((char*)mappedSubResource.pData + offset, &pointLightDesc, sizeof(PointLight::PointLightDesc));
+        offset += sizeof(PointLight::PointLightDesc);
+    }
+
+    deviceCon->Unmap(pointLightsBuffer, NULL);
+
+    hr = deviceCon->Map(lightsCountsBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubResource);
+    if (FAILED(hr)) throw;
+
+    unsigned int count = pointLights.size();
+    memcpy((char*)mappedSubResource.pData, &count, sizeof(PointLight::PointLightDesc));
+
+    deviceCon->Unmap(lightsCountsBuffer, NULL);
 }

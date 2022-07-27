@@ -28,3 +28,8 @@ SIZE_T PixelShader::GetCodeBufferSize()
 {
     return pixelShaderCode->GetBufferSize();
 }
+
+void PixelShader::setPixelShader(Graphics* graphics)
+{
+    graphics->deviceCon->PSSetShader(pixelShader, NULL, NULL);
+}

@@ -12,6 +12,8 @@
 #include <WICTextureLoader.h>
 #include <DDSTextureLoader.h>
 #include "Camera.h"
+#include <map>
+#include "Texture.h"
 
 class Mesh
 {
@@ -19,11 +21,14 @@ public:
 
 	std::vector<Vertex> vertices;
 	std::vector<int> indices;
+	std::map<int, Texture*> textures;
 	float3 position;
 	float3 rotationAngle;
 	float3 scale = {1, 1, 1};
 	float someAngle;
+	bool drawDepthStencil = true;
 	Mesh(Graphics* graphics, std::vector<Vertex> vertices, std::vector<int> indices, VertexShader* vertexShader, PixelShader* pixelShader);
+	void setTexture(Texture* texture, int slot);
 	void draw(Graphics* graphics, Camera* camera);
 private:
 	Buffer* vertexBuffer;
