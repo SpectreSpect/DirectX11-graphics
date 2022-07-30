@@ -1,3 +1,0 @@
-newmtl material_1
-    map_Kd baked_mesh_tex0.png
-    map_ao baked_mesh_ao0.png
