@@ -14,7 +14,6 @@ public:
 	void freeCursor();
 	void hideCursor();
 	void showCursor();
-
 private:
 	std::vector<char> rawInputBuffer;
 };

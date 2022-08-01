@@ -38,8 +38,13 @@ void Graphics::initDirectX11(HWND outputWindow, int backWidth, int backHeight)
     hr = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)& backBuffer);
     if (FAILED(hr))throw;
 
-    hr = device->CreateRenderTargetView(backBuffer, NULL, &backRenderTarget);
+    renderTarget = new RenderTarget();
+
+    //hr = device->CreateRenderTargetView(backBuffer, NULL, &backRenderTarget);
+    hr = device->CreateRenderTargetView(backBuffer, NULL, &renderTarget->renderTarget);
     if (FAILED(hr)) throw;
+
+    backRenderTarget = renderTarget->renderTarget;
 
     D3D11_VIEWPORT viewPort{};
     viewPort.MinDepth = 0.0f;
@@ -102,6 +107,11 @@ void Graphics::initDepthStencil()
     oldClock = clock();
 }
 
+void Graphics::initTexturesContent()
+{
+    texturesContent = new TexturesContent(this);
+}
+
 void Graphics::setFirstOldClockAndDeltaTime()
 {
     oldClock = clock();
@@ -149,4 +159,9 @@ void Graphics::updatePointLights()
     memcpy((char*)mappedSubResource.pData, &count, sizeof(PointLight::PointLightDesc));
 
     deviceCon->Unmap(lightsCountsBuffer, NULL);
+}
+
+void Graphics::setCameraToDraw(Camera* camera)
+{
+    this->cameraToDraw = camera;
 }

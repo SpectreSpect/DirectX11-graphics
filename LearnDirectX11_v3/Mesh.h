@@ -14,22 +14,24 @@
 #include "Camera.h"
 #include <map>
 #include "Texture.h"
+#include "Transformable.h"
 
-class Mesh
+class Mesh : public Transformable
 {
 public:
 
 	std::vector<Vertex> vertices;
 	std::vector<int> indices;
 	std::map<int, Texture*> textures;
-	float3 position;
-	float3 rotationAngle;
-	float3 scale = {1, 1, 1};
+	//float3 position;
+	//float3 rotationAngle;
+	//float3 scale = {1, 1, 1};
 	float someAngle;
 	bool drawDepthStencil = true;
 	Mesh(Graphics* graphics, std::vector<Vertex> vertices, std::vector<int> indices, VertexShader* vertexShader, PixelShader* pixelShader);
 	void setTexture(Texture* texture, int slot);
 	void draw(Graphics* graphics, Camera* camera);
+	//void draw(Graphics* graphics, Camera* camera, Transform* transform);
 private:
 	Buffer* vertexBuffer;
 	Buffer* constantBuffer;
@@ -43,5 +45,6 @@ private:
 	ID3D11ShaderResourceView* SRVnormalMap;
 	void setupMesh(Graphics* graphics, VertexShader* vertexShader, PixelShader* pixelShader);
 	void update(Graphics* graphics, Camera* camera);
+	//void update(Graphics* graphics, Camera* camera, Transform* transform);
 };
 

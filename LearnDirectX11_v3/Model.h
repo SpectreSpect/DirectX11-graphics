@@ -6,8 +6,9 @@
 #include <string>
 #include "Camera.h"
 #include <vector>
+#include "Transformable.h"
 
-class Model
+class Model : public Transformable
 {
 public:
 	struct TextureStruct
@@ -15,11 +16,13 @@ public:
 		Texture* texture;
 		unsigned int slot;
 	};
+	int counter = 0;
 
-	float3 position;
-	float3 rotationAngle;
-	float3 scale = {1, 1, 1};
+	//float3 position;
+	//float3 rotation;
+	//float3 scale = {1, 1, 1};
 	std::vector<TextureStruct*> textures;
+	std::string extension;
 	bool drawDepthStencil = true;
 	Model(Graphics* graphics, char* modelPath);
 	Model(Graphics* graphics, char* modelPath, VertexShader* vertexShader, PixelShader* pixelShader);
@@ -27,6 +30,7 @@ public:
 	void deleteTexture(unsigned int slot);
 	std::vector<Texture*> loadMaterialTextures(Graphics* graphics, aiMaterial* mat, aiTextureType type);
 	virtual void draw(Graphics* graphics, Camera* camera);
+	//void draw(Graphics* graphics, Camera* camera, Transform* transform);
 private:
 	std::vector<Mesh> meshes;
 	std::string directory;

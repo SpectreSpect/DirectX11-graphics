@@ -29,23 +29,35 @@ std::vector<Texture*> Model::loadMaterialTextures(Graphics* graphics, aiMaterial
 		aiString str;
 		mat->GetTexture(type, i, &str);
 
-		//Convert char to wchar_t
+		std::string path;
 
-		//rsize_t length = strlen(str.C_Str()) + 1;
+		if (extension.compare("fbx") == 0)
+		{
+			path = directory.substr( 0, directory.find_last_of('\\'));
+			path = path.substr(0, path.find_last_of('\\')) + "\\textures\\";
 
-		//char* t = (char*)directory.c_str();
-		//char* inputStr = new char[10000];
-		//memcpy((void*)inputStr, directory.c_str(), str.length);
-		//strcat_s(inputStr, length, (const char*)str.C_Str());
+			std::string inputPath = str.C_Str();
+			inputPath = inputPath.substr(inputPath.find_last_of('\\') + 1, inputPath.size());
+			path += inputPath;
+		}
+		else
+		{
+			path = directory + str.C_Str();
+		}
 
-		std::string path = directory + str.C_Str();
+
+
+
+
+
 
 		size_t cSize = strlen(path.c_str()) + 1;
 		if (cSize > 1)
 			int point = 0;
 		wchar_t* texFileNameWChar = new wchar_t[cSize];
 		MultiByteToWideChar(0, 0, path.c_str(), cSize, texFileNameWChar, cSize);
-		//Convert char to wchar_t
+
+
 
 		Texture* texture = new Texture(graphics, texFileNameWChar);
 		textures.push_back(texture);
@@ -67,15 +79,32 @@ void Model::draw(Graphics* graphics, Camera* camera)
 	for (int i = 0; i < meshes.size(); i++)
 	{
 		meshes[i].position = position;
-		meshes[i].rotationAngle = rotationAngle;
+		meshes[i].rotation = rotation;
 		meshes[i].scale = scale;
 		meshes[i].drawDepthStencil = drawDepthStencil;
 		meshes[i].draw(graphics, camera);
 	}
 }
 
+//void Model::draw(Graphics* graphics, Camera* camera, Transform* transform)
+//{
+//	for (int i = 0; i < textures.size(); i++)
+//		textures[i]->texture->bind(textures[i]->slot);
+//
+//	for (int i = 0; i < meshes.size(); i++)
+//	{
+//		meshes[i].position = position;
+//		meshes[i].rotation = rotation;
+//		meshes[i].scale = scale;
+//		meshes[i].drawDepthStencil = drawDepthStencil;
+//		meshes[i].draw(graphics, camera);
+//	}
+//}
+
 void Model::loadModel(Graphics* graphics, std::string path, VertexShader* vertexShader, PixelShader* pixelShader)
 {
+
+	extension = path.substr(path.find_last_of('.') + 1, path.size());
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
@@ -91,15 +120,6 @@ void Model::processNode(Graphics* graphics, aiNode* node, const aiScene* scene, 
 	for (int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-
-
-
-
-
-
-
-
-
 		meshes.push_back(processMesh(graphics, scene, mesh, vertexShader, pixelShader));
 	}
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -112,6 +132,7 @@ void Model::processNode(Graphics* graphics, aiNode* node, const aiScene* scene, 
 
 Mesh Model::processMesh(Graphics* graphics, const aiScene* scene, aiMesh* mesh, VertexShader* vertexShader, PixelShader* pixelShader)
 {
+	counter++;
 	std::vector<Vertex> vertices;
 	std::vector<int> indices;
 
@@ -156,54 +177,11 @@ Mesh Model::processMesh(Graphics* graphics, const aiScene* scene, aiMesh* mesh, 
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
 	}
-	
-
 	Mesh outputMesh = Mesh(graphics, vertices, indices, vertexShader, pixelShader);
-
-
 
 	if (mesh->mMaterialIndex >= 0)
 	{
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		//aiString texFileName;
-		//material->GetTexture(aiTextureType_NORMALS, 0, &texFileName);
-
-		// Convert char into wchar_t
-		//const char* t = texFileName.C_Str();
-		//size_t cSize = strlen(texFileName.C_Str()) + 1;
-		//if (cSize > 1)
-		//	int point = 0;
-		//wchar_t* texFileNameWChar = new wchar_t[cSize];
-		//MultiByteToWideChar(0, 0, texFileName.C_Str(), cSize, texFileNameWChar, cSize);
-		// Convert char into wchar_t
-		//outputMesh.textures[0] = new Texture(graphics, texFileNameWChar);
-
-		std::vector<Texture*> texturesDiffuse = loadMaterialTextures(graphics, material, aiTextureType_DIFFUSE);
-		//std::vector<Texture*> texturesNormal = loadMaterialTextures(graphics, material, aiTextureType_NORMALS);
-		//std::vector<Texture*> texturesRoughness = loadMaterialTextures(graphics, material, aiTextureType_DIFFUSE_ROUGHNESS);
-		std::vector<Texture*> texturesBaseColor = loadMaterialTextures(graphics, material, aiTextureType_BASE_COLOR);
-		//std::vector<Texture*> texturesNormals2 = loadMaterialTextures(graphics, material, aiTextureType_AMBIENT);
-
-		if (texturesDiffuse.size() > 0)
-			outputMesh.textures[0] = texturesDiffuse[0];
-
-		//if (texturesRoughness.size() > 0)
-		//	int k = 0;
-
-		if (texturesBaseColor.size() > 0)
-			outputMesh.textures[0] = texturesBaseColor[0];
-
-
-
-		//std::vector<Texture*> texturesDiffuse2 = loadMaterialTextures(graphics, material, aiTextureType_DIFFUSE);
-
-		//if (texturesNormal.size() > 0)
-		//	outputMesh.textures[1] = texturesNormal[0];
-
-		//if (texturesNormals2.size() > 0)
-		//	outputMesh.textures[1] = texturesNormals2[0];
-
-
 
 		//int countAMBIENT = material->GetTextureCount(aiTextureType_AMBIENT);
 		//int countAMBIENT_OCCLUSION = material->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION);
@@ -231,11 +209,18 @@ Mesh Model::processMesh(Graphics* graphics, const aiScene* scene, aiMesh* mesh, 
 
 		//if (countAMBIENT > 0 || countAMBIENT_OCCLUSION > 0 || countBASE_COLOR > 0 || countCLEARCOAT > 0 || countDIFFUSE > 0 || countDIFFUSE_ROUGHNESS > 0 || countDISPLACEMENT > 0 || countEMISSION_COLOR > 0 || countEMISSIVE > 0 || countHEIGHT > 0 || countLIGHTMAP > 0 || countMETALNESS > 0 || countNONE > 0 || countNORMALS > 0 || countNORMAL_CAMERA > 0 || countOPACITY > 0 || countREFLECTION > 0 || countSHEEN > 0 || countSHININESS > 0 || countSPECULAR > 0 || countTRANSMISSION > 0 || countUNKNOWN > 0 || countForce32Bit > 0)
 		//{
-		//	int k = 0;
+		//	int k =	 0;
 		//}
 
+		std::vector<Texture*> texturesDiffuse = loadMaterialTextures(graphics, material, aiTextureType_DIFFUSE);
+		std::vector<Texture*> texturesBaseColor = loadMaterialTextures(graphics, material, aiTextureType_BASE_COLOR);
 
+		if (texturesDiffuse.size() > 0)
+			outputMesh.textures[0] = texturesDiffuse[0];
+
+
+		if (texturesBaseColor.size() > 0)
+			outputMesh.textures[0] = texturesBaseColor[0];
 	}
-
 	return outputMesh;
 }
