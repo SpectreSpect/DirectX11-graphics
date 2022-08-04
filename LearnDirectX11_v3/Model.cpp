@@ -13,7 +13,8 @@ Model::Model(Graphics* graphics, char* modelPath, VertexShader* vertexShader, Pi
 void Model::setTexture(Texture* texture, unsigned int slot)
 {
 	//textures[slot] = texture;
-	textures.push_back(new TextureStruct{ texture, slot });
+	//textures.push_back(new TextureStruct{ texture, slot });
+	textures[slot] = texture;
 }
 
 void Model::deleteTexture(unsigned int slot)
@@ -69,12 +70,11 @@ std::vector<Texture*> Model::loadMaterialTextures(Graphics* graphics, aiMaterial
 
 void Model::draw(Graphics* graphics, Camera* camera)
 {
-	//for (int i = 0; i < maxTexturesCount; i++)
-	//	if (textures[i])
-	//		textures[i]->bind(i);
+	//for (int i = 0; i < textures.size(); i++)
+	//	textures[i]->texture->bind(textures[i]->slot);
 
-	for (int i = 0; i < textures.size(); i++)
-		textures[i]->texture->bind(textures[i]->slot);
+	for (auto it = textures.begin(); it != textures.end(); it++)
+		it->second->bind(it->first);
 
 	for (int i = 0; i < meshes.size(); i++)
 	{
@@ -88,8 +88,11 @@ void Model::draw(Graphics* graphics, Camera* camera)
 
 void Model::draw(Graphics* graphics, Camera* camera, DirectX::XMMATRIX modelMatrix)
 {
-	for (int i = 0; i < textures.size(); i++)
-		textures[i]->texture->bind(textures[i]->slot);
+	//for (int i = 0; i < textures.size(); i++)
+	//	textures[i]->texture->bind(textures[i]->slot);
+
+	for (auto it = textures.begin(); it != textures.end(); it++)
+		it->second->bind(it->first);
 
 	for (int i = 0; i < meshes.size(); i++)
 	{
@@ -144,7 +147,6 @@ void Model::processNode(Graphics* graphics, aiNode* node, const aiScene* scene, 
 
 Mesh Model::processMesh(Graphics* graphics, const aiScene* scene, aiMesh* mesh, VertexShader* vertexShader, PixelShader* pixelShader)
 {
-	counter++;
 	std::vector<Vertex> vertices;
 	std::vector<int> indices;
 

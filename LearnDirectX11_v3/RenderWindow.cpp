@@ -10,6 +10,7 @@ RenderWindow::RenderWindow()
 	graphics->initDepthStencil();
 	ShowWindow(window->hwnd, 1);
 	graphics->initTexturesContent();
+	modelsContent = new ModelsContent(this);
 
 	RAWINPUTDEVICE rid{};
 	rid.usUsagePage = 0x01;
@@ -36,6 +37,7 @@ RenderWindow::~RenderWindow()
 {
 	delete window;
 	delete graphics;
+	delete modelsContent;
 }
 
 //void RenderWindow::showWindow()

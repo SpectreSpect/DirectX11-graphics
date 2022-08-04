@@ -12,6 +12,7 @@
 #include "TwoBalls.h"
 #include <chrono>
 #include "Spherenic.h"
+#include "ModeledObject.h"
 
 //int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLine, int nCmdShow)
 //{
@@ -177,10 +178,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 	Sphere* sphere = new Sphere(renderWindow);
 	Spherenic* spherenic = new Spherenic(renderWindow);
 
-	Model plane = Model(renderWindow->graphics, (char*)"Models//Plane.obj", renderWindow->graphics->shadersContent->defaultVS, renderWindow->graphics->shadersContent->defaultPS);
-	plane.setTexture(renderWindow->graphics->texturesContent->stoneWallAlbedo, 0);
-	plane.setTexture(renderWindow->graphics->texturesContent->stoneWallNormalMap, 1);
-	plane.setScale({1, 1, 1});
+	ModeledObject* modeledObject = new ModeledObject(renderWindow->modelsContent->sphere);
+	modeledObject->setPosition({0, 3, 0});
+
+	ModeledObject* plane = new ModeledObject(renderWindow->modelsContent->plane);
+	plane->setTexture(renderWindow->graphics->texturesContent->stoneWallAlbedo, 0);
+	plane->setTexture(renderWindow->graphics->texturesContent->stoneWallNormalMap, 1);
+	plane->setScale({1, 1, 1});
 
 	PointLight whitePointLight = PointLight(renderWindow->graphics, (char*)"Models//sphere.obj", renderWindow->graphics->shadersContent->defaultVS, renderWindow->graphics->shadersContent->lightSourcePS);
 	whitePointLight.setPosition(float3{ 0, 1, -3 });
@@ -188,6 +192,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 	whitePointLight.setFactors(float3{ 1, 0.014f, 0.0007f });
 
 	float k = 0;
+	float timer = 0;
 
 	renderWindow->graphics->setCameraToDraw(mainCamera);
 	while (renderWindow->isOpen)
@@ -199,8 +204,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 		renderWindow->updatePointLights();
 		renderWindow->clear(float4{ 0, 0, 0, 0 });
 
-		for(int i = 0; i < 1000; i++)
-			plane.draw(renderWindow->graphics, mainCamera);
+		timer += 1 * renderWindow->graphics->deltaTime;
+
+		for (int i = 0; i < 1000; i++)
+			renderWindow->Draw(plane);
 
 		renderWindow->Draw(sphere);
 		sphere->setPosition({k * 0.1f, 0, 3});
@@ -213,6 +220,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 		k += 3.14f * renderWindow->graphics->deltaTime;
 		whitePointLight.setPosition({cos(0.0f) * 2, 1, sin(0.0f) * 2});
 		whitePointLight.draw(renderWindow->graphics, mainCamera);
+
+		if ((int)timer % 2 == 1)
+			modeledObject->setModel(renderWindow->modelsContent->plane);
+		else
+			modeledObject->setModel(renderWindow->modelsContent->sphere);
+
+		renderWindow->Draw(modeledObject);
 
 		renderWindow->display();
 		renderWindow->endDeltaTime();

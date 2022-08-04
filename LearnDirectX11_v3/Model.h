@@ -16,12 +16,7 @@ public:
 		Texture* texture;
 		unsigned int slot;
 	};
-	int counter = 0;
-
-	//float3 position;
-	//float3 rotation;
-	//float3 scale = {1, 1, 1};
-	std::vector<TextureStruct*> textures;
+	std::map<unsigned int, Texture*> textures;
 	std::string extension;
 	bool drawDepthStencil = true;
 	Model(Graphics* graphics, char* modelPath);
