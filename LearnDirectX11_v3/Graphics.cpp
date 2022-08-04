@@ -120,6 +120,7 @@ void Graphics::setFirstOldClockAndDeltaTime()
 
 void Graphics::updateDeltaTime()
 {
+    double check = clock() - oldClock;
     deltaTime = max((double)(clock() - oldClock) / 1000.0, 0.000001);
     oldClock = clock();
 }

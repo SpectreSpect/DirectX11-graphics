@@ -9,7 +9,7 @@ class Sphere : public Transformable, public IDrawable
 public:
 	Sphere(RenderWindow* renderWindow);
 	RenderWindow* getRenderWindow();
-	virtual void draw(RenderTarget* renderTarget, TransformState* state) override;
+	virtual void draw(RenderTarget* renderTarget, RenderState* state) override;
 private:
 	RenderWindow* renderWindow;
 	Model* model;

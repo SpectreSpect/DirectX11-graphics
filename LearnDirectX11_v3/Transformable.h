@@ -8,5 +8,5 @@ public:
 	float3 position = {};
 	float3 rotation = {};
 	float3 scale = { 1, 1, 1 };
-	//Transform transfrom;
+	DirectX::XMMATRIX modelMatrix;
 };

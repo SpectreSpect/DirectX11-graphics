@@ -7,7 +7,7 @@ RenderWindow::RenderWindow()
 	graphics = new Graphics();
 	graphics->initDirectX11(window->hwnd);
 	graphics->initDepthStencil();
-	ShowWindow(window->hwnd, NULL);
+	ShowWindow(window->hwnd, 1);
 	graphics->initTexturesContent();
 
 	RAWINPUTDEVICE rid{};
@@ -18,6 +18,17 @@ RenderWindow::RenderWindow()
 
 	if (!RegisterRawInputDevices(&rid, 1, sizeof(rid)))
 		throw;
+
+	msg = {};
+
+	//RAWINPUTDEVICE rid{};
+	//rid.usUsagePage = 0x01;
+	//rid.usUsage = 0x02;
+	//rid.dwFlags = 0;
+	//rid.hwndTarget = nullptr;
+
+	//if (!RegisterRawInputDevices(&rid, 1, sizeof(rid)))
+	//	throw;
 }
 
 RenderWindow::~RenderWindow()
@@ -32,7 +43,9 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::Draw(IDrawable* object)
 {
-	//object->draw();
+	RenderState renderState;
+	renderState.modelMatrix = DirectX::XMMatrixIdentity();
+	object->draw(graphics->renderTarget, &renderState);
 }
 
 void RenderWindow::display()
@@ -42,7 +55,56 @@ void RenderWindow::display()
 	graphics->swapChain->Present(0, 0);
 }
 
+void RenderWindow::update()
+{
+	//if (boundCamera->responded)
+	boundCamera->responseInput(graphics, window);
+	boundCamera->update(graphics);
+
+	//renderWindow->boundCamera->responseInput(renderWindow->graphics, renderWindow->window);
+	//renderWindow->boundCamera->update(renderWindow->graphics);
+}
+
+void RenderWindow::dispatchEvents()
+{
+	while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+		if (msg.message == WM_QUIT)
+			isOpen = false;
+	}
+}
+
+void RenderWindow::clear(float4 color)
+{
+	graphics->deviceCon->ClearRenderTargetView(graphics->renderTarget->renderTarget, (const FLOAT*)&color);
+}
+
+void RenderWindow::updatePointLights()
+{
+	graphics->deviceCon->PSSetShaderResources(9, 1, &graphics->pointLightsSRV);
+	graphics->deviceCon->PSSetConstantBuffers(9, 1, &graphics->lightsCountsBuffer);
+}
+
 void RenderWindow::setCamera(Camera* camera)
 {
 	boundCamera = camera;
+}
+
+void RenderWindow::startDeltaTime()
+{
+	start = std::chrono::steady_clock::now();
+}
+
+void RenderWindow::endDeltaTime()
+{
+	auto end = std::chrono::steady_clock::now();
+	long long elapsedTimeNano = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+	graphics->deltaTime = elapsedTimeNano * 0.000000001;
+}
+
+void RenderWindow::setBackRenderTargetAndDepthStencil()
+{
+	graphics->deviceCon->OMSetRenderTargets(1, &graphics->backRenderTarget, graphics->depthStencilView);
 }

@@ -32,7 +32,7 @@ public:
 	ID3D11Buffer* lightsCountsBuffer;
 	int resWidth;
 	int resHeight;
-	double deltaTime;
+	double deltaTime = 1 / 60.0;
 	Graphics();
 	void initDirectX11(HWND outputWindow, int backWidth = -1, int backHeight = -1);
 	void initDepthStencil();

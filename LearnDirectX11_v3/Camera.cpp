@@ -1,15 +1,17 @@
 #include "Camera.h"
 
-Camera::Camera(float3 camPos, float3 camRotation)
+Camera::Camera(float3 camPos, float3 camRotation, bool responded)
 {
+	this->responded = responded;
 	this->position = camPos;
 	this->rotation = camRotation;
 	viewMatrix = DirectX::XMMatrixIdentity();
 	projectionMatrix = DirectX::XMMatrixIdentity();
 }
 
-Camera::Camera()
+Camera::Camera(bool responded)
 {
+	this->responded = responded;
 	position = {};
 	rotation = {};
 	viewMatrix = DirectX::XMMatrixIdentity();
@@ -26,6 +28,8 @@ void Camera::update(Graphics* graphics)
 
 void Camera::responseInput(Graphics* graphics, MainWindow* mainWindow)
 {
+	if (mainWindow->rawMouseDelta.x)
+		int k = 5;
 	rotation.x += (double)mainWindow->rawMouseDelta.x * rotationSpeed * graphics->deltaTime;
 	rotation.y += (double)mainWindow->rawMouseDelta.y * rotationSpeed * graphics->deltaTime;
 

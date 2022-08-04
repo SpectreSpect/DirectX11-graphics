@@ -197,7 +197,7 @@
     <ClInclude Include="TexturesContent.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Transformable.h" />
-    <ClInclude Include="TransformState.h" />
+    <ClInclude Include="RenderState.h" />
     <ClInclude Include="TwoBalls.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="VSLightSource.h" />

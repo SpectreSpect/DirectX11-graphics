@@ -17,7 +17,11 @@ LRESULT MainWindow::handleMessage(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lP
             if (rawInput->header.dwType == RIM_TYPEMOUSE)
             {
                 if (rawInput->data.mouse.lLastX != 0 || rawInput->data.mouse.lLastY != 0)
-                    rawMouseDelta = { rawInput->data.mouse.lLastX , rawInput->data.mouse.lLastY };
+                {
+                    rawMouseDelta.x += rawInput->data.mouse.lLastX;
+                    rawMouseDelta.y += rawInput->data.mouse.lLastY;
+                }
+
             }
             else if (rawInput->header.dwType == RIM_TYPEKEYBOARD)
             {

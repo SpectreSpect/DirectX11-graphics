@@ -1,3 +1,4 @@
+#pragma once
 #include <DirectXMath.h>
 #include "mymath.h"
 

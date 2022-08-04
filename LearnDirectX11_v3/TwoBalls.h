@@ -1,3 +1,4 @@
+#pragma once
 #include "IDrawable.h"
 #include "Transformable.h"
 #include "Sphere.h"

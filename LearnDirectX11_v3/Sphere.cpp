@@ -32,10 +32,13 @@ RenderWindow* Sphere::getRenderWindow()
 	return renderWindow;
 }
 
-void Sphere::draw(RenderTarget* renderTarget, TransformState* state)
+void Sphere::draw(RenderTarget* renderTarget, RenderState* state)
 {
-	model->position = position;
-	model->rotation = rotation;
-	model->scale = scale;
-	model->draw(renderWindow->graphics, renderWindow->boundCamera);
+	state->modelMatrix = state->modelMatrix * modelMatrix;
+	renderTarget->draw(model, state);
+
+	//model->position = position;
+	//model->rotation = rotation;
+	//model->scale = scale;
+	//model->draw(renderWindow->graphics, renderWindow->boundCamera);
 }

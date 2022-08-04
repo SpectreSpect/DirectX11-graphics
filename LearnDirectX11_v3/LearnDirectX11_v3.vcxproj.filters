@@ -188,7 +188,7 @@
     <ClInclude Include="RenderTarget.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="TransformState.h">
+    <ClInclude Include="RenderState.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
