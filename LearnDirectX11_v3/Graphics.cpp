@@ -144,7 +144,7 @@ void Graphics::updatePointLights()
         pointLightDesc.kc = pointLights[i]->kc;
         pointLightDesc.kl = pointLights[i]->kl;
         pointLightDesc.kq = pointLights[i]->kq;
-        pointLightDesc.position = pointLights[i]->position;
+        pointLightDesc.position = pointLights[i]->getPosition();
         pointLightDesc.turnedOn = pointLights[i]->turnedOn;
 
         memcpy((char*)mappedSubResource.pData + offset, &pointLightDesc, sizeof(PointLight::PointLightDesc));

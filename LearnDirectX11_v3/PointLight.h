@@ -20,7 +20,7 @@ public:
 	PointLight(Graphics* graphics, char* modelPath, bool bind = true);
 	PointLight(Graphics* graphics, char* modelPath, VertexShader* vertexShader, PixelShader* pixelShader, bool bind = true);
 	void bind(Graphics* graphics);
-	void setPosition(float3 position);
+	void setPosition(float3 position) override;
 	void setColor(float4 color);
 	void setFactors(float3 factors);
 	void setParams(float3 position, float4 color, float3 factors);

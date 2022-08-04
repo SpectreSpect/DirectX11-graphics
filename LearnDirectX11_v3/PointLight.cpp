@@ -22,7 +22,7 @@ void PointLight::bind(Graphics* graphics)
 
 void PointLight::setPosition(float3 position)
 {
-	this->position = position;
+	Model::setPosition(position);
 	graphics->updatePointLights();
 }
 
@@ -43,7 +43,7 @@ void PointLight::setFactors(float3 factors)
 
 void PointLight::setParams(float3 position, float4 color, float3 factors)
 {
-	this->position = position;
+	Model::setPosition(position);
 	this->color = color;
 	kc = factors.x;
 	kl = factors.y;

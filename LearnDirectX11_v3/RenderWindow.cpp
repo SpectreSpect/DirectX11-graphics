@@ -1,4 +1,5 @@
 #include "RenderWindow.h"
+#include "Camera.h"
 
 RenderWindow::RenderWindow()
 {
@@ -43,9 +44,9 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::Draw(IDrawable* object)
 {
-	RenderState renderState;
+	RenderState renderState = RenderState(this);
 	renderState.modelMatrix = DirectX::XMMatrixIdentity();
-	object->draw(graphics->renderTarget, &renderState);
+	object->draw(graphics->renderTarget, renderState);
 }
 
 void RenderWindow::display()

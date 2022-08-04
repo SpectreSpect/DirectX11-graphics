@@ -78,8 +78,26 @@ void Mesh::setTexture(Texture* texture, int slot)
 
 void Mesh::update(Graphics* graphics, Camera* camera)
 {
-	//transfrom.Update(position, rotation, scale);
+	float3 position = getPosition();
+	float3 rotation = getRotation();
+	float3 scale = getScale();
 	DirectX::XMMATRIX modelMatrix = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z) * DirectX::XMMatrixRotationX(rotation.x) * DirectX::XMMatrixRotationY(rotation.y) * DirectX::XMMatrixRotationZ(rotation.z) * DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+	MVP = DirectX::XMMatrixTranspose(modelMatrix * camera->viewMatrix * camera->projectionMatrix);
+	modelMatrix = DirectX::XMMatrixTranspose(modelMatrix);
+
+	D3D11_MAPPED_SUBRESOURCE ms{};
+	graphics->deviceCon->Map(constantBuffer->get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+
+	memcpy(ms.pData, &modelMatrix, sizeof(modelMatrix));
+	char* lastPos = (char*)ms.pData + sizeof(modelMatrix);
+	memcpy(lastPos, &MVP, sizeof(MVP));
+	lastPos = lastPos + sizeof(MVP);
+	memcpy(lastPos, &camera->position, sizeof(float4));
+	graphics->deviceCon->Unmap(constantBuffer->get(), NULL);
+}
+
+void Mesh::update(Graphics* graphics, Camera* camera, DirectX::XMMATRIX modelMatrix)
+{
 	MVP = DirectX::XMMatrixTranspose(modelMatrix * camera->viewMatrix * camera->projectionMatrix);
 	modelMatrix = DirectX::XMMatrixTranspose(modelMatrix);
 
@@ -106,6 +124,32 @@ void Mesh::draw(Graphics* graphics, Camera* camera)
 	UINT strides = sizeof(Vertex);
 	UINT offset = 0;
 	if(drawDepthStencil)
+		graphics->deviceCon->OMSetRenderTargets(1, &graphics->backRenderTarget, graphics->depthStencilView);
+	else
+		graphics->deviceCon->OMSetRenderTargets(1, &graphics->backRenderTarget, NULL);
+	sampleState->set(graphics);
+	graphics->deviceCon->IASetVertexBuffers(0, 1, vertexBuffer->getpp(), &strides, &offset);
+	graphics->deviceCon->VSSetConstantBuffers(0, 1, constantBuffer->getpp());
+	graphics->deviceCon->IASetIndexBuffer(indexBuffer->get(), DXGI_FORMAT_R32_UINT, 0);
+	vertexShader->setVertexShader(graphics);
+	graphics->deviceCon->PSSetShader(pixelShader->get(), NULL, NULL);
+	vertexShader->setLayout(graphics);
+	graphics->deviceCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	graphics->deviceCon->DrawIndexed(indices.size(), 0, 0);
+}
+
+void Mesh::draw(Graphics* graphics, Camera* camera, DirectX::XMMATRIX modelMatrix)
+{
+	update(graphics, camera, modelMatrix);
+
+	for (auto i = textures.begin(); i != textures.end(); i++)
+		i->second->bind(i->first);
+
+	//graphics->deviceCon->PSSetShaderResources(0, 1, &SRVMink);
+	//graphics->deviceCon->PSSetShaderResources(1, 1, &SRVnormalMap);
+	UINT strides = sizeof(Vertex);
+	UINT offset = 0;
+	if (drawDepthStencil)
 		graphics->deviceCon->OMSetRenderTargets(1, &graphics->backRenderTarget, graphics->depthStencilView);
 	else
 		graphics->deviceCon->OMSetRenderTargets(1, &graphics->backRenderTarget, NULL);

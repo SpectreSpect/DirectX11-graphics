@@ -11,6 +11,7 @@
 #include "Sphere.h"
 #include "TwoBalls.h"
 #include <chrono>
+#include "Spherenic.h"
 
 //int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLine, int nCmdShow)
 //{
@@ -174,19 +175,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 	renderWindow->setCamera(mainCamera);
 
 	Sphere* sphere = new Sphere(renderWindow);
-
-
+	Spherenic* spherenic = new Spherenic(renderWindow);
 
 	Model plane = Model(renderWindow->graphics, (char*)"Models//Plane.obj", renderWindow->graphics->shadersContent->defaultVS, renderWindow->graphics->shadersContent->defaultPS);
 	plane.setTexture(renderWindow->graphics->texturesContent->stoneWallAlbedo, 0);
 	plane.setTexture(renderWindow->graphics->texturesContent->stoneWallNormalMap, 1);
-	plane.scale = float3{ 1, 1, 1 };
-
+	plane.setScale({1, 1, 1});
 
 	PointLight whitePointLight = PointLight(renderWindow->graphics, (char*)"Models//sphere.obj", renderWindow->graphics->shadersContent->defaultVS, renderWindow->graphics->shadersContent->lightSourcePS);
 	whitePointLight.setPosition(float3{ 0, 1, -3 });
 	whitePointLight.setColor(float4{ 1, 1, 1, 1 });
 	whitePointLight.setFactors(float3{ 1, 0.014f, 0.0007f });
+
+	float k = 0;
 
 	renderWindow->graphics->setCameraToDraw(mainCamera);
 	while (renderWindow->isOpen)
@@ -198,11 +199,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 		renderWindow->updatePointLights();
 		renderWindow->clear(float4{ 0, 0, 0, 0 });
 
-		//for(int i = 0; i < 1000; i++)
-		//plane.draw(renderWindow->graphics, mainCamera);
+		for(int i = 0; i < 1000; i++)
+			plane.draw(renderWindow->graphics, mainCamera);
 
 		renderWindow->Draw(sphere);
+		sphere->setPosition({k * 0.1f, 0, 3});
+		sphere->setRotation({k * 0.1f, 0, 0});
 
+		renderWindow->Draw(spherenic);
+		spherenic->setRotation({k, 0, 0});
+		spherenic->setPosition({ cos(k * 0.1f) * 7, 0, sin(k * 0.1f) * 7});
+
+		k += 3.14f * renderWindow->graphics->deltaTime;
+		whitePointLight.setPosition({cos(0.0f) * 2, 1, sin(0.0f) * 2});
 		whitePointLight.draw(renderWindow->graphics, mainCamera);
 
 		renderWindow->display();

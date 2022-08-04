@@ -30,6 +30,7 @@ public:
 	void deleteTexture(unsigned int slot);
 	std::vector<Texture*> loadMaterialTextures(Graphics* graphics, aiMaterial* mat, aiTextureType type);
 	virtual void draw(Graphics* graphics, Camera* camera);
+	virtual void draw(Graphics* graphics, Camera* camera, DirectX::XMMATRIX modelMatrix);
 	//void draw(Graphics* graphics, Camera* camera, Transform* transform);
 private:
 	std::vector<Mesh> meshes;

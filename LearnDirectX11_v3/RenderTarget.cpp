@@ -1,14 +1,18 @@
 #include "RenderTarget.h"
+#include "Model.h"
+#include "RenderWindow.h"
 
 RenderTarget::RenderTarget()
 {
 
 }
 
-void RenderTarget::draw(Model* model, RenderState* state)
+void RenderTarget::draw(Model* model, RenderState state)
 {
-	//model->position = position;
-//model->rotation = rotation;
-//model->scale = scale;
-//model->draw(renderWindow->graphics, renderWindow->boundCamera);
+	model->draw(state.renderWindow->graphics, state.renderWindow->boundCamera, state.modelMatrix);
+}
+
+void RenderTarget::draw(IDrawable* drawable, RenderState state)
+{
+	drawable->draw(this, state);
 }

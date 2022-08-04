@@ -16,8 +16,9 @@ void GameObject::update()
 
 void GameObject::draw()
 {
-	model->position = position;
-	model->rotation = rotation;
-	model->scale = scale;
-	model->draw(graphics, graphics->cameraToDraw);
+	//model->position = position;
+	//model->rotation = rotation;
+	//model->scale = scale;
+	//model->setScale()
+	//model->draw(graphics, graphics->cameraToDraw);
 }

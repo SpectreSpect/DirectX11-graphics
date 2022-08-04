@@ -155,6 +155,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="RenderState.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="SampleState.cpp" />
@@ -162,9 +163,11 @@
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Spherenic.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturesContent.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="Transformable.cpp" />
     <ClCompile Include="TwoBalls.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="VSLightSource.cpp" />
@@ -192,6 +195,7 @@
     <ClInclude Include="Shape.h" />
     <ClInclude Include="SomeObject.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Spherenic.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TexturesContent.h" />
