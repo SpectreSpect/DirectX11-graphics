@@ -24,7 +24,6 @@ public:
 	ShadersContent* shadersContent;
 	TexturesContent* texturesContent;
 	HWND hwnd;
-	Camera* cameraToDraw;
 	std::vector<PointLight*> pointLights;
 	int maxPointLightsCount = 500;
 	ID3D11Buffer* pointLightsBuffer;
@@ -39,9 +38,8 @@ public:
 	void initTexturesContent();
 	void setFirstOldClockAndDeltaTime();
 	void updateDeltaTime();
-	void bindPointLights();
 	void updatePointLights();
-	void setCameraToDraw(Camera* camera);
+	//void setCameraToDraw(Camera* camera);
 private:
 	long long oldClock;
 };

@@ -194,7 +194,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 	float k = 0;
 	float timer = 0;
 
-	renderWindow->graphics->setCameraToDraw(mainCamera);
+	//renderWindow->graphics->setCameraToDraw(mainCamera);
 	while (renderWindow->isOpen)
 	{
 		renderWindow->startDeltaTime();

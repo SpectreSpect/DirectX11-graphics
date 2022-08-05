@@ -125,11 +125,6 @@ void Graphics::updateDeltaTime()
     oldClock = clock();
 }
 
-void Graphics::bindPointLights()
-{
-
-}
-
 void Graphics::updatePointLights()
 {
     D3D11_MAPPED_SUBRESOURCE mappedSubResource{};
@@ -160,9 +155,4 @@ void Graphics::updatePointLights()
     memcpy((char*)mappedSubResource.pData, &count, sizeof(PointLight::PointLightDesc));
 
     deviceCon->Unmap(lightsCountsBuffer, NULL);
-}
-
-void Graphics::setCameraToDraw(Camera* camera)
-{
-    this->cameraToDraw = camera;
 }
