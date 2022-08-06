@@ -14,6 +14,7 @@
 #include "Spherenic.h"
 #include "ModeledObject.h"
 #include "SkySphere.h"
+#include <Test.h>
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLine, int nCmdShow)
 {
@@ -24,7 +25,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 
 	Sphere* sphere = new Sphere(renderWindow);
 
-	ModeledObject* tree = new ModeledObject(renderWindow, renderWindow->modelsContent->ghosthz);
+	ModeledObject* tree = new ModeledObject(renderWindow, renderWindow->modelsContent->tree);
 	tree->setTexture(renderWindow->graphics->texturesContent->flatNormalMap, 1);
 	//tree->setTexture(renderWindow->graphics->texturesContent->ghosthzAlbedo, 0);
 	tree->setRotation({-3.14 / 2, 0, 0});
