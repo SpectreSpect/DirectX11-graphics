@@ -26,6 +26,7 @@ public:
 	std::vector<Texture*> loadMaterialTextures(Graphics* graphics, aiMaterial* mat, aiTextureType type);
 	virtual void draw(Graphics* graphics, Camera* camera);
 	virtual void draw(Graphics* graphics, Camera* camera, DirectX::XMMATRIX modelMatrix);
+	void draw(RenderTarget* renderTarget, RenderState renderState);
 	//void draw(Graphics* graphics, Camera* camera, Transform* transform);
 private:
 	std::vector<Mesh> meshes;

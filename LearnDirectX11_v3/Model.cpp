@@ -88,9 +88,6 @@ void Model::draw(Graphics* graphics, Camera* camera)
 
 void Model::draw(Graphics* graphics, Camera* camera, DirectX::XMMATRIX modelMatrix)
 {
-	//for (int i = 0; i < textures.size(); i++)
-	//	textures[i]->texture->bind(textures[i]->slot);
-
 	for (auto it = textures.begin(); it != textures.end(); it++)
 		it->second->bind(it->first);
 
@@ -98,6 +95,18 @@ void Model::draw(Graphics* graphics, Camera* camera, DirectX::XMMATRIX modelMatr
 	{
 		meshes[i].drawDepthStencil = drawDepthStencil;
 		meshes[i].draw(graphics, camera, modelMatrix);
+	}
+}
+
+void Model::draw(RenderTarget* renderTarget, RenderState renderState)
+{
+	for (auto it = textures.begin(); it != textures.end(); it++)
+		it->second->bind(it->first);
+
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		meshes[i].drawDepthStencil = drawDepthStencil;
+		meshes[i].draw(renderTarget, renderState);
 	}
 }
 

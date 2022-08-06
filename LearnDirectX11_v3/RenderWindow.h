@@ -17,7 +17,7 @@ public:
 
 	RenderWindow();
 	~RenderWindow();
-	void Draw(IDrawable* object);
+	void Draw(IDrawable* object, bool depthStencilOn = true);
 	void display();
 	void update();
 	void dispatchEvents();

@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "RenderWindow.h"
 
 Mesh::Mesh(Graphics* graphics, std::vector<Vertex> vertices, std::vector<int> indices, VertexShader* vertexShader, PixelShader* pixelShader)
 {
@@ -162,6 +163,30 @@ void Mesh::draw(Graphics* graphics, Camera* camera, DirectX::XMMATRIX modelMatri
 	vertexShader->setLayout(graphics);
 	graphics->deviceCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	graphics->deviceCon->DrawIndexed(indices.size(), 0, 0);
+}
+
+void Mesh::draw(RenderTarget* renderTarget, RenderState state)
+{
+	update(state.renderWindow->graphics, state.renderWindow->boundCamera, state.modelMatrix);
+
+	for (auto i = textures.begin(); i != textures.end(); i++)
+		i->second->bind(i->first);
+
+	UINT strides = sizeof(Vertex);
+	UINT offset = 0;
+	if (state.depthStencilOn)
+		state.renderWindow->graphics->deviceCon->OMSetRenderTargets(1, &renderTarget->renderTarget, state.renderWindow->graphics->depthStencilView);
+	else
+		state.renderWindow->graphics->deviceCon->OMSetRenderTargets(1, &renderTarget->renderTarget, NULL);
+	sampleState->set(state.renderWindow->graphics);
+	state.renderWindow->graphics->deviceCon->IASetVertexBuffers(0, 1, vertexBuffer->getpp(), &strides, &offset);
+	state.renderWindow->graphics->deviceCon->VSSetConstantBuffers(0, 1, constantBuffer->getpp());
+	state.renderWindow->graphics->deviceCon->IASetIndexBuffer(indexBuffer->get(), DXGI_FORMAT_R32_UINT, 0);
+	//vertexShader->setVertexShader(graphics);
+	//graphics->deviceCon->PSSetShader(pixelShader->get(), NULL, NULL);
+	vertexShader->setLayout(state.renderWindow->graphics);
+	state.renderWindow->graphics->deviceCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	state.renderWindow->graphics->deviceCon->DrawIndexed(indices.size(), 0, 0);
 }
 
 //void Mesh::update(Graphics* graphics, Camera* camera, Transform* transform)

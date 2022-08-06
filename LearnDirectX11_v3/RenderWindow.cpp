@@ -44,10 +44,11 @@ RenderWindow::~RenderWindow()
 //{
 //}
 
-void RenderWindow::Draw(IDrawable* object)
+void RenderWindow::Draw(IDrawable* object, bool depthStencilOn)
 {
 	RenderState renderState = RenderState(this);
 	renderState.modelMatrix = DirectX::XMMatrixIdentity();
+	renderState.depthStencilOn = depthStencilOn;
 	object->draw(graphics->renderTarget, renderState);
 }
 

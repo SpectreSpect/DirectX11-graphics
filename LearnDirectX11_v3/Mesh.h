@@ -23,15 +23,13 @@ public:
 	std::vector<Vertex> vertices;
 	std::vector<int> indices;
 	std::map<int, Texture*> textures;
-	//float3 position;
-	//float3 rotationAngle;
-	//float3 scale = {1, 1, 1};
 	float someAngle;
-	bool drawDepthStencil = true;
+	bool drawDepthStencil = false;
 	Mesh(Graphics* graphics, std::vector<Vertex> vertices, std::vector<int> indices, VertexShader* vertexShader, PixelShader* pixelShader);
 	void setTexture(Texture* texture, int slot);
 	void draw(Graphics* graphics, Camera* camera);
 	void draw(Graphics* graphics, Camera* camera, DirectX::XMMATRIX modelMatrix);
+	void draw(RenderTarget* renderTarget, RenderState renderState);
 	//void draw(Graphics* graphics, Camera* camera, Transform* transform);
 private:
 	Buffer* vertexBuffer;

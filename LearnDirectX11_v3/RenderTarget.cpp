@@ -10,7 +10,8 @@ RenderTarget::RenderTarget()
 
 void RenderTarget::draw(Model* model, RenderState state)
 {
-	model->draw(state.renderWindow->graphics, state.renderWindow->boundCamera, state.modelMatrix);
+	//model->draw(state.renderWindow->graphics, state.renderWindow->boundCamera, state.modelMatrix);
+	model->draw(this, state);
 }
 
 void RenderTarget::draw(IDrawable* drawable, RenderState state)

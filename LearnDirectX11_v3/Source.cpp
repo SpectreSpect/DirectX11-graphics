@@ -13,6 +13,7 @@
 #include <chrono>
 #include "Spherenic.h"
 #include "ModeledObject.h"
+#include "SkySphere.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLine, int nCmdShow)
 {
@@ -32,18 +33,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 	plane->setTexture(renderWindow->graphics->texturesContent->stoneWallNormalMap, 1);
 	plane->setScale({1, 1, 1});
 
-	//PointLight whitePointLight = PointLight(renderWindow->graphics, (char*)"Models//sphere.obj", renderWindow->graphics->shadersContent->defaultVS, renderWindow->graphics->shadersContent->lightSourcePS);
-	//whitePointLight.setPosition(float3{ 0, 1, -3 });
-	//whitePointLight.setColor(float4{ 1, 1, 1, 1 });
-	//whitePointLight.setFactors(float3{ 1, 0.014f, 0.0007f });
-
 	PointLight* pointLight = new PointLight(renderWindow, renderWindow->modelsContent->sphere);
 	pointLight->setPosition(float3{ 0, 1, -3 });
 	pointLight->setColor(float4{ 1, 1, 1, 1 });
 	pointLight->setFactors(float3{ 1, 0.014f, 0.0007f });
 
-	int size = renderWindow->graphics->pointLights2.size();
-
+	SkySphere* skySphere = new SkySphere(renderWindow, renderWindow->graphics->texturesContent->textureSky);
 
 	float k = 0;
 	float timer = 0;
@@ -59,6 +54,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 
 		timer += 1 * renderWindow->graphics->deltaTime;
 
+		renderWindow->Draw(skySphere, false);
+
 		for (int i = 0; i < 1000; i++)
 			renderWindow->Draw(plane);
 
@@ -73,8 +70,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 		k += 3.14f * renderWindow->graphics->deltaTime;
 		pointLight->setPosition({ cos(k) * 2, 1, sin(k) * 2 });
 		renderWindow->Draw(pointLight);
-		//whitePointLight.setPosition({cos(0.0f) * 2, 1, sin(0.0f) * 2});
-		//whitePointLight.draw(renderWindow->graphics, mainCamera);
 
 		if ((int)timer % 2 == 1)
 			modeledObject->setModel(renderWindow->modelsContent->plane);
