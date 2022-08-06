@@ -24,10 +24,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 
 	Sphere* sphere = new Sphere(renderWindow);
 
-	ModeledObject* tree = new ModeledObject(renderWindow, renderWindow->modelsContent->tree);
+	ModeledObject* tree = new ModeledObject(renderWindow, renderWindow->modelsContent->ghosthz);
 	tree->setTexture(renderWindow->graphics->texturesContent->flatNormalMap, 1);
+	//tree->setTexture(renderWindow->graphics->texturesContent->ghosthzAlbedo, 0);
 	tree->setRotation({-3.14 / 2, 0, 0});
-	tree->setScale({1, 1, 2.5f});
+	tree->setScale({1, 1, 1});
 
 	PointLight* pointLight = new PointLight(renderWindow, renderWindow->modelsContent->sphere);
 	pointLight->setPosition(float3{ 0, 1, -3 });

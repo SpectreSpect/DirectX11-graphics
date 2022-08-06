@@ -13,6 +13,7 @@ public:
 	Texture* wheelRobotBaseColor;
 	Texture* wheelRobotNormal;
 	Texture* bugAlbedo;
+	Texture* ghosthzAlbedo;
 	TexturesContent(Graphics* graphics);
 	~TexturesContent();
 };

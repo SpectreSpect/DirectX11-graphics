@@ -7,6 +7,7 @@ public:
 	Model* sphere;
 	Model* plane;
 	Model* tree;
+	Model* ghosthz;
 
 	ModelsContent(RenderWindow* renderWindow);
 	~ModelsContent();
