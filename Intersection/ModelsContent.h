@@ -6,6 +6,7 @@ class ModelsContent
 public:
 	Model* sphere;
 	Model* plane;
+	Model* tree;
 
 	ModelsContent(RenderWindow* renderWindow);
 	~ModelsContent();

@@ -129,5 +129,5 @@ float4 main(Input input) : SV_TARGET
 		}
 	}
 	
-	return diffusion * texColor + specular * texColor;
+	return diffusion * texColor + specular * texColor + ambient * texColor;
 }
