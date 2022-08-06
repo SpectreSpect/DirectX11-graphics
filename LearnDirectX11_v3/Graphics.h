@@ -8,6 +8,7 @@
 #include "TexturesContent.h"
 #include <vector>
 #include "RenderTarget.h"
+#include "PointLight2.h"
 
 class Camera;
 class PointLight;
@@ -25,6 +26,7 @@ public:
 	TexturesContent* texturesContent;
 	HWND hwnd;
 	std::vector<PointLight*> pointLights;
+	std::vector<PointLight2*> pointLights2;
 	int maxPointLightsCount = 500;
 	ID3D11Buffer* pointLightsBuffer;
 	ID3D11ShaderResourceView* pointLightsSRV;

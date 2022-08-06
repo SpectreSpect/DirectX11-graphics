@@ -1,6 +1,7 @@
 #include "RenderTarget.h"
 #include "Model.h"
 #include "RenderWindow.h"
+#include "IDrawable.h"
 
 RenderTarget::RenderTarget()
 {

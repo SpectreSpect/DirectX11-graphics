@@ -131,8 +131,8 @@ void Mesh::draw(Graphics* graphics, Camera* camera)
 	graphics->deviceCon->IASetVertexBuffers(0, 1, vertexBuffer->getpp(), &strides, &offset);
 	graphics->deviceCon->VSSetConstantBuffers(0, 1, constantBuffer->getpp());
 	graphics->deviceCon->IASetIndexBuffer(indexBuffer->get(), DXGI_FORMAT_R32_UINT, 0);
-	vertexShader->setVertexShader(graphics);
-	graphics->deviceCon->PSSetShader(pixelShader->get(), NULL, NULL);
+	//vertexShader->setVertexShader(graphics);
+	//graphics->deviceCon->PSSetShader(pixelShader->get(), NULL, NULL);
 	vertexShader->setLayout(graphics);
 	graphics->deviceCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	graphics->deviceCon->DrawIndexed(indices.size(), 0, 0);
@@ -157,8 +157,8 @@ void Mesh::draw(Graphics* graphics, Camera* camera, DirectX::XMMATRIX modelMatri
 	graphics->deviceCon->IASetVertexBuffers(0, 1, vertexBuffer->getpp(), &strides, &offset);
 	graphics->deviceCon->VSSetConstantBuffers(0, 1, constantBuffer->getpp());
 	graphics->deviceCon->IASetIndexBuffer(indexBuffer->get(), DXGI_FORMAT_R32_UINT, 0);
-	vertexShader->setVertexShader(graphics);
-	graphics->deviceCon->PSSetShader(pixelShader->get(), NULL, NULL);
+	//vertexShader->setVertexShader(graphics);
+	//graphics->deviceCon->PSSetShader(pixelShader->get(), NULL, NULL);
 	vertexShader->setLayout(graphics);
 	graphics->deviceCon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	graphics->deviceCon->DrawIndexed(indices.size(), 0, 0);

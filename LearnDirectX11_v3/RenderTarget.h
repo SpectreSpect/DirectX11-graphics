@@ -2,8 +2,8 @@
 //#include "Model.h"
 #include <d3d11.h>
 #include "RenderState.h"
-#include "IDrawable.h"
 
+class IDrawable;
 class Model;
 
 class RenderTarget

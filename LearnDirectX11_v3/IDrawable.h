@@ -1,7 +1,6 @@
 #pragma once
-
-class RenderTarget;
-class RenderState;
+#include "RenderState.h"
+#include "RenderTarget.h"
 
 class IDrawable
 {
