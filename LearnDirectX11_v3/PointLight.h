@@ -1,8 +1,16 @@
 #pragma once
-#include "Model.h"
-class PointLight : public Model
+#include "IDrawable.h"
+#include "Transformable.h"
+
+
+class RenderWindow;
+class ModeledObject;
+
+class PointLight : public Transformable, public IDrawable
 {
 public:
+	RenderWindow* renderWindow;
+	ModeledObject* model;
 	struct PointLightDesc
 	{
 		float3 position;
@@ -15,18 +23,22 @@ public:
 	float kc = 1;
 	float kl = 0.010f;
 	float kq = 0.0005f;
-	float4 color = {1, 1, 1, 1};
+	float4 color = { 1, 1, 1, 1 };
 	bool turnedOn = true;
-	PointLight(Graphics* graphics, char* modelPath, bool bind = true);
-	PointLight(Graphics* graphics, char* modelPath, VertexShader* vertexShader, PixelShader* pixelShader, bool bind = true);
-	void bind(Graphics* graphics);
-	void setPosition(float3 position) override;
+
+
+	PointLight(RenderWindow* renderWindow, Model* model, bool bind = true);
+	~PointLight();
+	void bind(RenderWindow* renderWindow);
+	virtual void setPosition(float3 position) override;
 	void setColor(float4 color);
 	void setFactors(float3 factors);
 	void setParams(float3 position, float4 color, float3 factors);
 	void turn(bool on);
-	virtual void draw(Graphics* graphics, Camera* camera) override;
-private:
-	Graphics* graphics;
+
+
+
+
+	virtual void draw(RenderTarget* renderTarget, RenderState state) override;
 };
 

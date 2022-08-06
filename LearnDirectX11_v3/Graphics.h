@@ -8,7 +8,7 @@
 #include "TexturesContent.h"
 #include <vector>
 #include "RenderTarget.h"
-#include "PointLight2.h"
+#include "PointLight.h"
 
 class Camera;
 class PointLight;
@@ -25,8 +25,7 @@ public:
 	ShadersContent* shadersContent;
 	TexturesContent* texturesContent;
 	HWND hwnd;
-	std::vector<PointLight*> pointLights;
-	std::vector<PointLight2*> pointLights2;
+	std::vector<PointLight*> pointLights2;
 	int maxPointLightsCount = 500;
 	ID3D11Buffer* pointLightsBuffer;
 	ID3D11ShaderResourceView* pointLightsSRV;
@@ -41,7 +40,6 @@ public:
 	void setFirstOldClockAndDeltaTime();
 	void updateDeltaTime();
 	void updatePointLights();
-	//void setCameraToDraw(Camera* camera);
 private:
 	long long oldClock;
 };

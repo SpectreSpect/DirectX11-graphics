@@ -1,64 +1,67 @@
 #include "PointLight.h"
+#include "RenderWindow.h"
+#include "ModeledObject.h"
 
-PointLight::PointLight(Graphics* graphics, char* modelPath, bool bind) : Model(graphics, modelPath)
+PointLight::PointLight(RenderWindow* renderWindow, Model* model, bool bind)
 {
+	this->model = new ModeledObject(renderWindow, model, renderWindow->graphics->shadersContent->defaultVS, renderWindow->graphics->shadersContent->lightSourcePS);
+	this->model->setTexture(renderWindow->graphics->texturesContent->stoneWallAlbedo, 0);
+	this->model->setTexture(renderWindow->graphics->texturesContent->stoneWallNormalMap, 1);
+
 	if (bind)
-		this->bind(graphics);
-	this->graphics = graphics;
+		this->bind(renderWindow);
+	this->renderWindow = renderWindow;
 }
 
-PointLight::PointLight(Graphics* graphics, char* modelPath, VertexShader* vertexShader, PixelShader* pixelShader, bool bind) : Model(graphics, modelPath, vertexShader, pixelShader)
+PointLight::~PointLight()
 {
-	if (bind)
-		this->bind(graphics);
-	this->graphics = graphics;
+	delete model;
 }
 
-void PointLight::bind(Graphics* graphics)
+void PointLight::bind(RenderWindow* renderWindow)
 {
-	graphics->pointLights.push_back(this);
-	graphics->updatePointLights();
+	renderWindow->graphics->pointLights2.push_back(this);
+	renderWindow->graphics->updatePointLights();
 }
 
 void PointLight::setPosition(float3 position)
 {
-	Model::setPosition(position);
-	graphics->updatePointLights();
+	Transformable::setPosition(position);
+	renderWindow->graphics->updatePointLights();
 }
 
 void PointLight::setColor(float4 color)
 {
 	this->color = color;
-	graphics->updatePointLights();
+	renderWindow->graphics->updatePointLights();
 }
 
 void PointLight::setFactors(float3 factors)
 {
-
 	kc = factors.x;
 	kl = factors.y;
 	kq = factors.z;
-	graphics->updatePointLights();
+	renderWindow->graphics->updatePointLights();
 }
 
 void PointLight::setParams(float3 position, float4 color, float3 factors)
 {
-	Model::setPosition(position);
+	Transformable::setPosition(position);
 	this->color = color;
 	kc = factors.x;
 	kl = factors.y;
 	kq = factors.z;
-	graphics->updatePointLights();
+	renderWindow->graphics->updatePointLights();
 }
 
 void PointLight::turn(bool on)
 {
 	turnedOn = on;
-	graphics->updatePointLights();
+	renderWindow->graphics->updatePointLights();
 }
 
-void PointLight::draw(Graphics* graphics, Camera* camera)
+void PointLight::draw(RenderTarget* renderTarget, RenderState state)
 {
-	//graphics->deviceCon->PSGetShaderResources(9, 1, &graphics->pointLightsSRV);
-	Model::draw(graphics, camera);
+	state.modelMatrix = modelMatrix * state.modelMatrix;
+	renderTarget->draw(model, state);
 }

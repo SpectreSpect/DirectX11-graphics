@@ -163,7 +163,7 @@ void Graphics::updatePointLights()
     unsigned int offset = 0;
     for (int i = 0; (i < pointLights2.size()) && (i < maxPointLightsCount); i++)
     {
-        PointLight2::PointLightDesc pointLightDesc{};
+        PointLight::PointLightDesc pointLightDesc{};
         pointLightDesc.color = pointLights2[i]->color;
         pointLightDesc.kc = pointLights2[i]->kc;
         pointLightDesc.kl = pointLights2[i]->kl;
@@ -171,8 +171,8 @@ void Graphics::updatePointLights()
         pointLightDesc.position = pointLights2[i]->getPosition();
         pointLightDesc.turnedOn = pointLights2[i]->turnedOn;
 
-        memcpy((char*)mappedSubResource.pData + offset, &pointLightDesc, sizeof(PointLight2::PointLightDesc));
-        offset += sizeof(PointLight2::PointLightDesc);
+        memcpy((char*)mappedSubResource.pData + offset, &pointLightDesc, sizeof(PointLight::PointLightDesc));
+        offset += sizeof(PointLight::PointLightDesc);
     }
 
     deviceCon->Unmap(pointLightsBuffer, NULL);
@@ -181,7 +181,7 @@ void Graphics::updatePointLights()
     if (FAILED(hr)) throw;
 
     unsigned int count = pointLights2.size();
-    memcpy((char*)mappedSubResource.pData, &count, sizeof(PointLight2::PointLightDesc));
+    memcpy((char*)mappedSubResource.pData, &count, sizeof(PointLight::PointLightDesc));
 
     deviceCon->Unmap(lightsCountsBuffer, NULL);
 }

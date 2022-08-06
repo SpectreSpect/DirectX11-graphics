@@ -63,9 +63,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="ShadersContent.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -111,7 +108,7 @@
     <ClCompile Include="ModelsContent.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="PointLight2.cpp">
+    <ClCompile Include="PointLight.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -162,9 +159,6 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="PointLight.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="ShadersContent.h">
@@ -218,7 +212,7 @@
     <ClInclude Include="ModelsContent.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="PointLight2.h">
+    <ClInclude Include="PointLight.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

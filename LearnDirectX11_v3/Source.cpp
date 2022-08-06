@@ -37,7 +37,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 	//whitePointLight.setColor(float4{ 1, 1, 1, 1 });
 	//whitePointLight.setFactors(float3{ 1, 0.014f, 0.0007f });
 
-	PointLight2* pointLight = new PointLight2(renderWindow, renderWindow->modelsContent->sphere);
+	PointLight* pointLight = new PointLight(renderWindow, renderWindow->modelsContent->sphere);
 	pointLight->setPosition(float3{ 0, 1, -3 });
 	pointLight->setColor(float4{ 1, 1, 1, 1 });
 	pointLight->setFactors(float3{ 1, 0.014f, 0.0007f });
