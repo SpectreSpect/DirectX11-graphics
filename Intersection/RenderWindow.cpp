@@ -61,12 +61,8 @@ void RenderWindow::display()
 
 void RenderWindow::update()
 {
-	//if (boundCamera->responded)
 	boundCamera->responseInput(graphics, window);
 	boundCamera->update(graphics);
-
-	//renderWindow->boundCamera->responseInput(renderWindow->graphics, renderWindow->window);
-	//renderWindow->boundCamera->update(renderWindow->graphics);
 }
 
 void RenderWindow::dispatchEvents()
